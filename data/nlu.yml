@@ -1,0 +1,20 @@
+version: "3.1"
+nlu:
+- intent: generate_recipe
+  examples: |
+    - Generate a recipe for [spaghetti carbonara](food)
+    - Show me how to make [spaghetti carbonara](food)
+    - Create a recipe for [spaghetti carbonara](food)
+    - Generate a recipe for [pasta alfredo](food)
+    - Make a recipe for [pasta alfredo](food)
+    - I want to cook [chicken curry](food)
+    - Recipe for [lasagna](food)
+    - Can you give me a recipe for [butter chicken](food)
+- intent: fallback
+  examples: |
+    - hi
+    - hello
+    - bye
+    - who are you
+    - good morning
+    - what's up
