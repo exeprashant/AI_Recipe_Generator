@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recipe Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #ff6f61 0%, #ff9f7f 100%);
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .recipe-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-800">AI Recipe Generator</h1>
+            <div>
+                <a href="#home" class="text-gray-600 hover:text-gray-800 mx-3">Home</a>
+                <a href="#about" class="text-gray-600 hover:text-gray-800 mx-3">About</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4" data-aos="fade-up">Discover Delicious Recipes</h2>
+            <p class="text-lg md:text-xl mb-8" data-aos="fade-up" data-aos-delay="100">
+                Enter a dish name and get a detailed recipe instantly!
+            </p>
+            <div class="max-w-lg mx-auto flex space-x-4" data-aos="fade-up" data-aos-delay="200">
+                <input
+                    type="text"
+                    id="recipeInput"
+                    class="flex-1 p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-white text-gray-800"
+                    placeholder="e.g., Generate a recipe for spaghetti carbonara"
+                    onkeypress="if(event.key === 'Enter') fetchRecipe()"
+                />
+                <button
+                    onclick="fetchRecipe()"
+                    class="bg-white text-gray-800 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform duration-300 flex items-center"
+                >
+                    <span id="buttonText">Get Recipe</span>
+                    <span id="spinner" class="spinner ml-2"></span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipe Output Section -->
+    <section id="recipeSection" class="container mx-auto px-6 py-12">
+        <div id="recipeOutput" class="hidden">
+            <div class="recipe-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up">
+                <p id="recipeText" class="whitespace-pre-line text-gray-800"></p>
+            </div>
+            <button
+                onclick="clearOutput()"
+                class="mt-4 bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+                Clear
+            </button>
+        </div>
+        <div id="errorOutput" class="hidden text-center">
+            <p id="errorText" class="text-red-600 bg-red-50 p-4 rounded-lg"></p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-gray-100 py-12">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="text-3xl font-bold text-gray-800 mb-4" data-aos="fade-up">About</h3>
+            <p class="text-gray-600 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+                AI Recipe Generator uses advanced AI to provide recipes for your favorite dishes. Powered by Rasa, this tool makes cooking easy and fun!
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 AI Recipe Generator. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({ duration: 1000 });
+
+        async function fetchRecipe() {
+            const input = document.getElementById('recipeInput').value.trim();
+            const recipeOutput = document.getElementById('recipeOutput');
+            const recipeText = document.getElementById('recipeText');
+            const errorOutput = document.getElementById('errorOutput');
+            const errorText = document.getElementById('errorText');
+            const buttonText = document.getElementById('buttonText');
+            const spinner = document.getElementById('spinner');
+
+            // Reset outputs
+            recipeOutput.classList.add('hidden');
+            errorOutput.classList.add('hidden');
+            recipeText.textContent = '';
+            errorText.textContent = '';
+
+            if (!input) {
+                errorOutput.classList.remove('hidden');
+                errorText.textContent = 'Please enter a recipe request.';
+                return;
+            }
+
+            // Show loading spinner
+            buttonText.textContent = 'Fetching...';
+            spinner.style.display = 'inline-block';
+
+            try {
+                const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sender: 'user',
+                        message: input
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch recipe from Rasa server.');
+                }
+
+                const data = await response.json();
+                if (data.length === 0) {
+                    throw new Error('No response from Rasa server.');
+                }
+
+                // Concatenate all text messages
+                const fullRecipe = data
+                    .filter(msg => msg.text)
+                    .map(msg => msg.text)
+                    .join('\n');
+
+                recipeOutput.classList.remove('hidden');
+                recipeText.textContent = fullRecipe;
+            } catch (error) {
+                errorOutput.classList.remove('hidden');
+                errorText.textContent = error.message || 'An error occurred while fetching the recipe.';
+            } finally {
+                // Hide loading spinner
+                buttonText.textContent = 'Get Recipe';
+                spinner.style.display = 'none';
+            }
+        }
+
+        function clearOutput() {
+            const recipeInput = document.getElementById('recipeInput');
+            const recipeOutput = document.getElementById('recipeOutput');
+            const recipeText = document.getElementById('recipeText');
+            const errorOutput = document.getElementById('errorOutput');
+            const errorText = document.getElementById('errorText');
+
+            recipeInput.value = '';
+            recipeOutput.classList.add('hidden');
+            errorOutput.classList.add('hidden');
+            recipeText.textContent = '';
+            errorText.textContent = '';
+        }
+    </script>
+</body>
+</html>

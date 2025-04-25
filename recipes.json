@@ -1,0 +1,58 @@
+[
+    {
+        "dish": "spaghetti carbonara",
+        "ingredients": [
+            "200g spaghetti",
+            "100g pancetta",
+            "2 large eggs",
+            "50g pecorino cheese",
+            "Black pepper",
+            "Salt"
+        ],
+        "steps": [
+            "Boil salted water and cook spaghetti until al dente.",
+            "Fry pancetta until crispy.",
+            "Whisk eggs and grated pecorino in a bowl.",
+            "Drain pasta, reserve some water, and mix with pancetta.",
+            "Add egg mixture off heat, stirring quickly to create a creamy sauce.",
+            "Season with black pepper and serve."
+        ]
+    },
+    {
+        "dish": "pasta alfredo",
+        "ingredients": [
+            "200g fettuccine",
+            "100g butter",
+            "1 cup heavy cream",
+            "50g parmesan cheese",
+            "Salt",
+            "Nutmeg"
+        ],
+        "steps": [
+            "Cook fettuccine in boiling salted water until al dente.",
+            "Melt butter in a pan, add cream, and simmer.",
+            "Stir in grated parmesan until smooth.",
+            "Season with salt and a pinch of nutmeg.",
+            "Toss pasta in sauce and serve hot."
+        ]
+    },
+    {
+        "dish": "chicken curry",
+        "ingredients": [
+            "500g chicken breast, cubed",
+            "1 onion, chopped",
+            "2 garlic cloves, minced",
+            "1 tbsp curry powder",
+            "400ml coconut milk",
+            "Salt",
+            "Cilantro"
+        ],
+        "steps": [
+            "Sauté onion and garlic until soft.",
+            "Add curry powder and cook for 1 minute.",
+            "Add chicken and cook until browned.",
+            "Pour in coconut milk, simmer for 20 minutes.",
+            "Season with salt, garnish with cilantro, and serve."
+        ]
+    }
+]

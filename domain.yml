@@ -1,0 +1,21 @@
+version: "3.1"
+intents:
+  - generate_recipe
+  - fallback
+entities:
+  - food
+slots:
+  food:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: food
+responses:
+  utter_fallback:
+    - text: "Sorry, I can only help with recipes. Try 'Generate a recipe for spaghetti carbonara'."
+actions:
+  - action_generate_recipe
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
